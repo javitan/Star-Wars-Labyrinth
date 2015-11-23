@@ -150,4 +150,5 @@ public class Personaje {
 	public void ponerDireccion(Dir movimiento) {
 		movimientos.add(movimiento);
 	}
+
 }

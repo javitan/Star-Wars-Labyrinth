@@ -17,24 +17,27 @@ public class Puerta {
 
 	private boolean abierta;
 	private boolean configurada;
-	private Integer capacidad;
+	private Integer capacidad = 15;
 	private Integer altura;
-	private Integer numMidiclorianos;
+	private Integer numMidiclorianos = 30;
 	private Arbol<Midicloriano> probados;
 	private Arbol<Midicloriano> cerradura;
 	private Midicloriano[] combinacion;
 	private static Puerta singleton;
+	
+	private Puerta(){
+		//Iniciar con lo que sea, ya que con el singleton nunca se ejecutará
+	}
 
-	private Puerta() {
+	public Puerta(int _altura) {
 		abierta = true;
 		configurada = false;
-		capacidad = 15;
-		altura = 5;
+		altura = _altura;
 		probados = new Arbol<Midicloriano>();
 		cerradura = new Arbol<Midicloriano>();
 		combinacion = new Midicloriano[capacidad];
-		numMidiclorianos = 30;
 		generarMidiclorianos();
+		singleton = this;
 	}
 	
 	public static Puerta obtenerInstancia(){

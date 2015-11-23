@@ -1,0 +1,7 @@
+--Galaxia
+GALAXIA#6#6#35#5#
+--Personajes de la simulación
+FAMILIAREAL#Leia#L#1#
+JEDI#LukeSkyWalker#S#2#
+IMPERIAL#DarthVader#D#1#
+CONTRABANDISTA#HanSolo#H#1#

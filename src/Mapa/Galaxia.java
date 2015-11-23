@@ -30,21 +30,26 @@ public class Galaxia {
 	private Puerta puerta;
 	private int MAXturno = 50;
 	private int turno = 1;
+	
+	private Galaxia(){
+		//Inicializar con lo que sea, ya que si carga con lo ficheros, nunca se va a ejecutar este.
+	}
 
-	private Galaxia() {
-		mapa = new Estacion[filas][columnas];
+	public Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
+		mapa = new Estacion[_filas][_columnas];
 		int num = 0;
-		for (int i = 0; i < filas; i++) {
-			for (int j = 0; j < columnas; j++) {
+		for (int i = 0; i < _filas; i++) {
+			for (int j = 0; j < _columnas; j++) {
 				mapa[i][j] = new Estacion(num);
 				// System.out.println("Estación " + num + " creada.");
 				num++;
 			}
 		}
-		puerta = Puerta.obtenerInstancia();
+		puerta = new Puerta(_altura);
 		puerta.configurarPuerta();
-		mapa[filas - 1][columnas - 1].ponerPuerta(puerta); // sin configurar
-		crearPersonajes();
+		mapa[_estacionPuerta/_columnas][_estacionPuerta%_columnas].ponerPuerta(puerta);
+		//crearPersonajes();
+		singleton = this;
 	}
 
 	public static Galaxia obtenerInstancia() {
@@ -53,17 +58,33 @@ public class Galaxia {
 		}
 		return singleton;
 	}
-
-	public void crearPersonajes() {
-		Personaje contra = new Contrabandista();
-		Personaje familia = new FamiliaReal();
-		Personaje jedi = new Jedi();
-		Personaje imperial = new Imperial();
-		mapa[0][0].insertarPersonaje(familia);
-		mapa[0][0].insertarPersonaje(jedi);
-		mapa[filas - 1][columnas - 1].insertarPersonaje(imperial);
-		mapa[filas - 1][0].insertarPersonaje(contra);
+	
+	public void insertarFamilia(Personaje pers){
+		mapa[0][0].insertarPersonaje(pers);
 	}
+	
+	public void insertarJedi(Personaje pers){
+		mapa[0][0].insertarPersonaje(pers);
+	}
+	
+	public void insertarContrabandista(Personaje pers){
+		mapa[filas-1][0].insertarPersonaje(pers);
+	}
+	
+	public void insertarImperial(Personaje pers){
+		mapa[filas-1][columnas-1].insertarPersonaje(pers);
+	}
+
+//	public void crearPersonajes() {
+//		Personaje contra = new Contrabandista();
+//		Personaje familia = new FamiliaReal();
+//		Personaje jedi = new Jedi();
+//		Personaje imperial = new Imperial();
+//		mapa[0][0].insertarPersonaje(familia);
+//		mapa[0][0].insertarPersonaje(jedi);
+//		mapa[filas - 1][columnas - 1].insertarPersonaje(imperial);
+//		mapa[filas - 1][0].insertarPersonaje(contra);
+//	}
 
 	public void ejecucion() {
 		ArrayList<Midicloriano> midiclorianos = new ArrayList<Midicloriano>();

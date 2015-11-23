@@ -10,6 +10,8 @@ package Cargador;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import Mapa.Galaxia;
+
 public class ClasePrincipal {
 	public static void main(String[] args) {
 		/**  
@@ -21,6 +23,7 @@ public class ClasePrincipal {
 			Método que procesa línea a línea el fichero de entrada inicio.txt
 			*/
 		     FicheroCarga.procesarFichero("inicio.txt", cargador);
+		     Galaxia.obtenerInstancia().ejecucion();
 		}
 		catch (FileNotFoundException valor)  {
 			System.err.println ("Excepción capturada al procesar fichero: "+valor.getMessage());
