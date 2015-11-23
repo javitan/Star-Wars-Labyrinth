@@ -235,11 +235,11 @@ public class Galaxia {
 //		mapa[x][y].obtenerColaPersonajes().remove();
 //	}
 
-	public void pintarMidiclorianos(ArrayList<Midicloriano> _midiclorianos) {
-		for (int i = 0; i < _midiclorianos.size(); i++) {
-			System.out.println(_midiclorianos.get(i));
-		}
-	}
+//	public void pintarMidiclorianos(ArrayList<Midicloriano> _midiclorianos) {
+//		for (int i = 0; i < _midiclorianos.size(); i++) {
+//			System.out.println(_midiclorianos.get(i));
+//		}
+//	}
 
 	public String toString() {
 		String string = " ";

@@ -18,9 +18,10 @@ public class Imperial extends Personaje {
 		insertarMidiclorianosImperial();
 	}
 
-	public Imperial(String _nombre) {
+	public Imperial(String _nombre, char _marca, int _turno) {
 		nombre = _nombre;
-		marca = 'I';
+		marca = _marca;
+		turno = _turno;
 		Dir[] direcciones = {Dir.N, Dir.N, Dir.O, Dir.N, Dir.N, Dir.O, Dir.S, Dir.O, Dir.O, Dir.N, Dir.N,
 				Dir.O, Dir.S, Dir.S, Dir.S, Dir.S, Dir.S, Dir.E, Dir.E, Dir.E, Dir.E, Dir.E };
 		for (int i = 0; i < direcciones.length; i++){

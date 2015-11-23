@@ -2,6 +2,8 @@ package Cargador;
 
 import java.util.List;
 
+import Personajes.FamiliaReal;
+
 /**
  * Clase creada para ser usada en la utilidad cargador
  * contiene el main del cargador. Se crea una instancia de la clase Galaxia, una instancia de la clase Cargador
@@ -102,6 +104,7 @@ public class Cargador {
 	private void crearFamiliaReal(int numCampos, List<String> vCampos){
 	    System.out.println("Creado FamiliaReal: " + vCampos.get(1) + "\n");
 	    //Registrar FamiliaReal en la galaxia
+	    FamiliaReal familia = new FamiliaReal(vCampos.get(1), vCampos.get(2).charAt(0), Integer.parseInt(vCampos.get(3)));
 	}
 	/**
 	 *  método que crea una instancia de la clase Jedi
