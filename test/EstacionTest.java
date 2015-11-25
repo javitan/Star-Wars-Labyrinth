@@ -17,13 +17,13 @@ public class EstacionTest {
 		estacion = new Estacion(5);
 	}
 
-//	@Test
-//	public void testPonerPuerta() {
-//		Puerta puerta = new Puerta();
-//		assertTrue(estacion.obtenerPuerta() == null);
-//		estacion.ponerPuerta(puerta);
-//		assertFalse(estacion.obtenerColaPersonajes() == null);
-//	}
+	// @Test
+	// public void testPonerPuerta() {
+	// Puerta puerta = new Puerta();
+	// assertTrue(estacion.obtenerPuerta() == null);
+	// estacion.ponerPuerta(puerta);
+	// assertFalse(estacion.obtenerColaPersonajes() == null);
+	// }
 
 	@Test
 	public void testInsertarPersonaje() {
@@ -38,9 +38,9 @@ public class EstacionTest {
 	public void testObtenerColaPersonajes() {
 		fail("Not yet implemented");
 	}
-	
+
 	@Test
-	public void testBorrarPersonaje(){
+	public void testBorrarPersonaje() {
 		fail("Not yet implemented");
 	}
 

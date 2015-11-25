@@ -113,7 +113,7 @@ public class Cargador {
 	private void crearGalaxia(int numCampos, List<String> vCampos) {
 		System.out.println("Creada galaxia: " + vCampos.get(1) + "\n");
 		// inicializar galaxia
-		Galaxia galaxia = new Galaxia(Integer.parseInt(vCampos.get(1)), Integer.parseInt(vCampos.get(2)),
+		Galaxia.obtenerInstanciaParam(Integer.parseInt(vCampos.get(1)), Integer.parseInt(vCampos.get(2)),
 				Integer.parseInt(vCampos.get(3)), Integer.parseInt(vCampos.get(4)));
 	}
 

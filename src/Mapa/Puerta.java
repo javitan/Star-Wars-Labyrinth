@@ -24,12 +24,8 @@ public class Puerta {
 	private Arbol<Midicloriano> cerradura;
 	private Midicloriano[] combinacion;
 	private static Puerta singleton;
-	
-	private Puerta(){
-		//Iniciar con lo que sea, ya que con el singleton nunca se ejecutará
-	}
 
-	public Puerta(int _altura) {
+	private Puerta(int _altura) {
 		abierta = true;
 		configurada = false;
 		altura = _altura;
@@ -37,26 +33,31 @@ public class Puerta {
 		cerradura = new Arbol<Midicloriano>();
 		combinacion = new Midicloriano[capacidad];
 		generarMidiclorianos();
-		singleton = this;
 	}
-	
-	public static Puerta obtenerInstancia(){
-		if (singleton == null){
-			singleton = new Puerta();
+
+	public static Puerta obtenerInstancia() {
+		if (singleton == null) {
+			singleton = new Puerta(0);
 		}
 		return singleton;
 	}
-	
-	public String obtenerEstadoPuerta(){
-		if (abierta == true){
-			return "abierta";
+
+	public static Puerta obtenerInstanciaParam(int altura) {
+		if (singleton == null) {
+			singleton = new Puerta(altura);
 		}
-		else{
+		return singleton;
+	}
+
+	public String obtenerEstadoPuerta() {
+		if (abierta == true) {
+			return "abierta";
+		} else {
 			return "cerrada";
 		}
 	}
-	
-	public int obtenerAltura(){
+
+	public int obtenerAltura() {
 		return altura;
 	}
 
@@ -120,14 +121,14 @@ public class Puerta {
 			return false;
 		}
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		String cadena = "";
 		cadena = cadena + cerradura;
 		return cadena;
 	}
-	
-	public String obtenerProbados(){
+
+	public String obtenerProbados() {
 		String cadena = "";
 		cadena = cadena + probados;
 		return cadena;
@@ -142,7 +143,7 @@ public class Puerta {
 			cerradura.borrar(midi);
 			if (comprobarCondiciones()) {
 				abierta = true;
-			} 
+			}
 		}
 		probados.insertar(midi);
 	}
@@ -155,8 +156,8 @@ public class Puerta {
 			colaMid.desencolar();
 		}
 	}
-	
-	public boolean obtenerBoolPuerta(){
+
+	public boolean obtenerBoolPuerta() {
 		return abierta;
 	}
 

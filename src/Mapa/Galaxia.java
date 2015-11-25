@@ -11,14 +11,8 @@
 package Mapa;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Queue;
 
-import Personajes.Contrabandista;
-import Personajes.Dir;
-import Personajes.FamiliaReal;
-import Personajes.Imperial;
-import Personajes.Jedi;
 import Personajes.Personaje;
 
 public class Galaxia {
@@ -29,13 +23,9 @@ public class Galaxia {
 	private Estacion mapa[][];
 	private Puerta puerta;
 	private int MAXturno = 50;
-	private int turno = 1;
-	
-	private Galaxia(){
-		//Inicializar con lo que sea, ya que si carga con lo ficheros, nunca se va a ejecutar este.
-	}
+	private int turno = 2;
 
-	public Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
+	private Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
 		mapa = new Estacion[_filas][_columnas];
 		int num = 0;
 		for (int i = 0; i < _filas; i++) {
@@ -45,46 +35,51 @@ public class Galaxia {
 				num++;
 			}
 		}
-		puerta = new Puerta(_altura);
+		puerta = Puerta.obtenerInstanciaParam(_altura);
 		puerta.configurarPuerta();
-		mapa[_estacionPuerta/_columnas][_estacionPuerta%_columnas].ponerPuerta(puerta);
-		//crearPersonajes();
-		singleton = this;
+		mapa[_estacionPuerta / _columnas][_estacionPuerta % _columnas].ponerPuerta(puerta);
+	}
+
+	public static Galaxia obtenerInstanciaParam(int columnas, int filas, int estacionPuerta, int altura) {
+		if (singleton == null) {
+			singleton = new Galaxia(columnas, filas, estacionPuerta, altura);
+		}
+		return singleton;
 	}
 
 	public static Galaxia obtenerInstancia() {
 		if (singleton == null) {
-			singleton = new Galaxia();
+			singleton = new Galaxia(0, 0, 0, 0);
 		}
 		return singleton;
 	}
-	
-	public void insertarFamilia(Personaje pers){
+
+	public void insertarFamilia(Personaje pers) {
 		mapa[0][0].insertarPersonaje(pers);
-	}
-	
-	public void insertarJedi(Personaje pers){
-		mapa[0][0].insertarPersonaje(pers);
-	}
-	
-	public void insertarContrabandista(Personaje pers){
-		mapa[filas-1][0].insertarPersonaje(pers);
-	}
-	
-	public void insertarImperial(Personaje pers){
-		mapa[filas-1][columnas-1].insertarPersonaje(pers);
 	}
 
-//	public void crearPersonajes() {
-//		Personaje contra = new Contrabandista();
-//		Personaje familia = new FamiliaReal();
-//		Personaje jedi = new Jedi();
-//		Personaje imperial = new Imperial();
-//		mapa[0][0].insertarPersonaje(familia);
-//		mapa[0][0].insertarPersonaje(jedi);
-//		mapa[filas - 1][columnas - 1].insertarPersonaje(imperial);
-//		mapa[filas - 1][0].insertarPersonaje(contra);
-//	}
+	public void insertarJedi(Personaje pers) {
+		mapa[0][0].insertarPersonaje(pers);
+	}
+
+	public void insertarContrabandista(Personaje pers) {
+		mapa[filas - 1][0].insertarPersonaje(pers);
+	}
+
+	public void insertarImperial(Personaje pers) {
+		mapa[filas - 1][columnas - 1].insertarPersonaje(pers);
+	}
+
+	// public void crearPersonajes() {
+	// Personaje contra = new Contrabandista();
+	// Personaje familia = new FamiliaReal();
+	// Personaje jedi = new Jedi();
+	// Personaje imperial = new Imperial();
+	// mapa[0][0].insertarPersonaje(familia);
+	// mapa[0][0].insertarPersonaje(jedi);
+	// mapa[filas - 1][columnas - 1].insertarPersonaje(imperial);
+	// mapa[filas - 1][0].insertarPersonaje(contra);
+	// }
 
 	public void ejecucion() {
 		ArrayList<Midicloriano> midiclorianos = new ArrayList<Midicloriano>();
@@ -111,11 +106,11 @@ public class Galaxia {
 		System.out.println("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
 				+ puerta.obtenerProbados() + ")");
 		System.out.println(this);
-		for (int i = 0; i < filas; i++){
-			for (int j = 0; j < columnas; j++){
-				LinkedList<Midicloriano> lista = mapa[i][j].obtenerListaMidiclorianos();
-				if (!lista.isEmpty()){
-					System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":" + lista + ")");
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				if (mapa[i][j].mostrarMidiclorianos() != " ") {
+					System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
+							+ mapa[i][j].mostrarMidiclorianos() + ")");
 				}
 			}
 		}
@@ -127,11 +122,10 @@ public class Galaxia {
 					if (!mapa[i][j].obtenerColaPersonajes().isEmpty()) {
 						while (!comprobarMovidos(mapa[i][j].obtenerColaPersonajes())) {
 							personaje = mapa[i][j].obtenerPrimero();
-							if (personaje.obtenerTurno()<turno) {
+							if (personaje.obtenerTurno() < turno) {
 								personaje.accionPuerta(mapa[i][j]);
 								personaje.aumentarTurno();
-								if (!personaje.obtenerColaMovimientos().isEmpty()){
-									//moverPersonaje(i, j, personaje, personaje.obtenerMovimiento());
+								if (!personaje.obtenerColaMovimientos().isEmpty()) {
 									personaje.moverPersonaje(i, j, personaje.obtenerMovimiento());
 								}
 							} else {
@@ -143,16 +137,16 @@ public class Galaxia {
 					}
 				}
 			}
-			System.out.println("(turno:" + turno + ")");
+			System.out.println("(turno:" + (turno - 1) + ")");
 			System.out.println("(galaxia:" + ((filas) * (columnas) - 1) + ")");
 			System.out.println("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta
 					+ ":" + puerta.obtenerProbados() + ")");
 			System.out.println(this);
-			for (int i = 0; i < filas; i++){
-				for (int j = 0; j < columnas; j++){
-					LinkedList<Midicloriano> lista = mapa[i][j].obtenerListaMidiclorianos();
-					if (!lista.isEmpty()){
-						System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":" + lista + ")");
+			for (int i = 0; i < filas; i++) {
+				for (int j = 0; j < columnas; j++) {
+					if (mapa[i][j].mostrarMidiclorianos() != " ") {
+						System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
+								+ mapa[i][j].mostrarMidiclorianos() + ")");
 					}
 				}
 			}
@@ -222,45 +216,46 @@ public class Galaxia {
 	public void borrarPersonaje(int x, int y) {
 		mapa[x][y].obtenerColaPersonajes().remove();
 	}
-	
-	public Estacion devolverEstacion(int x, int y){
+
+	public Estacion devolverEstacion(int x, int y) {
 		return mapa[x][y];
 	}
 
-//	public void insertar(int x, int y, Personaje personaje) {
-//		mapa[x][y].insertarPersonaje(personaje);
-//		personaje.accionEstacion(mapa[x][y]);
-//		personaje.accionPuerta(mapa[x][y]);
-//
-//	}
+	// public void insertar(int x, int y, Personaje personaje) {
+	// mapa[x][y].insertarPersonaje(personaje);
+	// personaje.accionEstacion(mapa[x][y]);
+	// personaje.accionPuerta(mapa[x][y]);
+	//
+	// }
 
-//	public void moverPersonaje(int x, int y, Personaje personaje, Dir direccion) {
-//		if (direccion == Dir.N && x > 0) {
-//			mapa[x - 1][y].insertarPersonaje(personaje);
-//			personaje.accionEstacion(mapa[x - 1][y]);
-//			// personaje.accionPuerta(mapa[x-1][y]);
-//		} else if (direccion == Dir.S && x < filas - 1) {
-//			mapa[x + 1][y].insertarPersonaje(personaje);
-//			personaje.accionEstacion(mapa[x + 1][y]);
-//			// personaje.accionPuerta(mapa[x+1][y]);
-//		} else if (direccion == Dir.E && y < columnas - 1) {
-//			mapa[x][y + 1].insertarPersonaje(personaje);
-//			personaje.accionEstacion(mapa[x][y + 1]);
-//			// personaje.accionPuerta(mapa[x][y+1]);
-//		} else if (direccion == Dir.O && y > 0) {
-//			mapa[x][y - 1].insertarPersonaje(personaje);
-//			personaje.accionEstacion(mapa[x][y - 1]);
-//			// personaje.accionPuerta(mapa[x][y-1]);
-//		}
-//		personaje.personajeMovido(); // pone movido a true
-//		mapa[x][y].obtenerColaPersonajes().remove();
-//	}
+	// public void moverPersonaje(int x, int y, Personaje personaje, Dir
+	// direccion) {
+	// if (direccion == Dir.N && x > 0) {
+	// mapa[x - 1][y].insertarPersonaje(personaje);
+	// personaje.accionEstacion(mapa[x - 1][y]);
+	// // personaje.accionPuerta(mapa[x-1][y]);
+	// } else if (direccion == Dir.S && x < filas - 1) {
+	// mapa[x + 1][y].insertarPersonaje(personaje);
+	// personaje.accionEstacion(mapa[x + 1][y]);
+	// // personaje.accionPuerta(mapa[x+1][y]);
+	// } else if (direccion == Dir.E && y < columnas - 1) {
+	// mapa[x][y + 1].insertarPersonaje(personaje);
+	// personaje.accionEstacion(mapa[x][y + 1]);
+	// // personaje.accionPuerta(mapa[x][y+1]);
+	// } else if (direccion == Dir.O && y > 0) {
+	// mapa[x][y - 1].insertarPersonaje(personaje);
+	// personaje.accionEstacion(mapa[x][y - 1]);
+	// // personaje.accionPuerta(mapa[x][y-1]);
+	// }
+	// personaje.personajeMovido(); // pone movido a true
+	// mapa[x][y].obtenerColaPersonajes().remove();
+	// }
 
-//	public void pintarMidiclorianos(ArrayList<Midicloriano> _midiclorianos) {
-//		for (int i = 0; i < _midiclorianos.size(); i++) {
-//			System.out.println(_midiclorianos.get(i));
-//		}
-//	}
+	// public void pintarMidiclorianos(ArrayList<Midicloriano> _midiclorianos) {
+	// for (int i = 0; i < _midiclorianos.size(); i++) {
+	// System.out.println(_midiclorianos.get(i));
+	// }
+	// }
 
 	public String toString() {
 		String string = " ";
@@ -285,10 +280,10 @@ public class Galaxia {
 		return string;
 	}
 
-	public static void main(String[] args) {
-		Galaxia galaxia = Galaxia.obtenerInstancia();
-		galaxia.ejecucion();
-		// System.out.println(galaxia);
-	}
+	// public static void main(String[] args) {
+	// Galaxia galaxia = Galaxia.obtenerInstancia();
+	// galaxia.ejecucion();
+	// // System.out.println(galaxia);
+	// }
 
 }

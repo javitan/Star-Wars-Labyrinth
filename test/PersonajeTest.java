@@ -10,12 +10,12 @@ import Personajes.Personaje;
 
 public class PersonajeTest {
 	static Personaje personaje;
-	
+
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() {
 		personaje = new Personaje();
 	}
-	
+
 	@Test
 	public void testAccionPuerta() {
 		fail("Not yet implemented");

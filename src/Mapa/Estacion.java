@@ -38,38 +38,59 @@ public class Estacion {
 	public void ponerPuerta(Puerta _puerta) {
 		puerta = _puerta;
 	}
-	
-	public int obtenerIdEstacion(){
+
+	public int obtenerIdEstacion() {
 		return id;
 	}
-	
-	public LinkedList<Midicloriano> obtenerListaMidiclorianos(){
-		return listaMidiclorianos;
-	}
-	
-	public Puerta obtenerPuerta(){
+
+	// public LinkedList<Midicloriano> obtenerListaMidiclorianos() {
+	// return listaMidiclorianos;
+	// }
+
+	public Puerta obtenerPuerta() {
 		return puerta;
 	}
 
 	public void insertarPersonaje(Personaje _pers) {
 		colaPersonajes.add(_pers);
 	}
-	
-	public void borrarPersonaje(Personaje _pers){
+
+	public void borrarPersonaje(Personaje _pers) {
 		colaPersonajes.remove(_pers);
 	}
-	
-	public Queue<Personaje> obtenerColaPersonajes(){
+
+	public Queue<Personaje> obtenerColaPersonajes() {
 		return colaPersonajes;
 	}
-	
-	public Personaje obtenerPrimero(){
+
+	public Personaje obtenerPrimero() {
 		return colaPersonajes.peek();
 	}
-	
-	public void insertarMidicloriano(Midicloriano _midi){
+
+	public Midicloriano obtenerPrimerMidicloriano() {
+		return listaMidiclorianos.getFirst();
+	}
+
+	public void borrarPrimerMidicloriano() {
+		listaMidiclorianos.removeFirst();
+	}
+
+	public void insertarMidicloriano(Midicloriano _midi) {
 		listaMidiclorianos.addLast(_midi);
-		Collections.sort(listaMidiclorianos); //se supone que ordena la lista (?)
+		Collections.sort(listaMidiclorianos); // se supone que ordena la lista
+												// (?)
+	}
+
+	public String mostrarMidiclorianos() {
+		String cadena = " ";
+		for (int i = 0; i < listaMidiclorianos.size(); i++) {
+			Midicloriano midi = listaMidiclorianos.get(i);
+			cadena = cadena + midi.obtenerIdMidi();
+			if (midi != listaMidiclorianos.getLast()) {
+				cadena = cadena + ", ";
+			}
+		}
+		return cadena;
 	}
 
 	// private List<Personaje> listaPersonajes;

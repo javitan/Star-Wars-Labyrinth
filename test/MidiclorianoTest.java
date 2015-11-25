@@ -8,9 +8,9 @@ import Mapa.Midicloriano;
 public class MidiclorianoTest {
 	static Midicloriano midi;
 	static Midicloriano midi2;
-	
+
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() {
 		midi = new Midicloriano(8);
 		midi2 = new Midicloriano(23);
 	}

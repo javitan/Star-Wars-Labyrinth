@@ -6,9 +6,9 @@ public class Jedi extends Personaje {
 		nombre = "Jedi";
 		marca = 'J';
 		turno = 0;
-		Dir[] direcciones = { Dir.E, Dir.S, Dir.S, Dir.S, Dir.O, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.S, Dir.S,
-				Dir.E, Dir.E };
-		for (int i = 0; i < direcciones.length; i++){
+		Dir[] direcciones = { Dir.E, Dir.S, Dir.S, Dir.S, Dir.O, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.S, Dir.S, Dir.E,
+				Dir.E };
+		for (int i = 0; i < direcciones.length; i++) {
 			movimientos.add(direcciones[i]);
 		}
 	}
@@ -17,14 +17,14 @@ public class Jedi extends Personaje {
 		nombre = _nombre;
 		marca = _marca;
 		turno = _turno;
-		Dir[] direcciones = { Dir.E, Dir.S, Dir.S, Dir.S, Dir.O, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.S, Dir.S,
-				Dir.E, Dir.E };
-		for (int i = 0; i < direcciones.length; i++){
+		Dir[] direcciones = { Dir.E, Dir.S, Dir.S, Dir.S, Dir.O, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.S, Dir.S, Dir.E,
+				Dir.E };
+		for (int i = 0; i < direcciones.length; i++) {
 			movimientos.add(direcciones[i]);
 		}
 	}
-	
-	public String toString(){ //TODO
+
+	public String toString() { // TODO
 		return super.toString();
 	}
 

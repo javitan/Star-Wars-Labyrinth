@@ -377,8 +377,8 @@ public class Grafo {
 		}
 		return sig;
 	}
-	
-	public int buscarFloidC(int a, int b){
+
+	public int buscarFloidC(int a, int b) {
 		return floydC[a][b];
 	}
 
@@ -457,10 +457,10 @@ public class Grafo {
 		System.out.println("Nodo con más adyacentes (Ej 2):");
 		int mayor = 0;
 		int numMax = 0;
-		for (int i = nodos[0]; i < nodos.length; i++){
+		for (int i = nodos[0]; i < nodos.length; i++) {
 			Set<Integer> adys = new LinkedHashSet<Integer>();
 			g.adyacentes(nodos[i], adys);
-			if (adys.size() > numMax){
+			if (adys.size() > numMax) {
 				numMax = adys.size();
 				mayor = nodos[i];
 			}

@@ -57,6 +57,8 @@ public class Personaje {
 			estacion = galaxia.devolverEstacion(x, y - 1);
 			estacion.insertarPersonaje(this);
 			this.accionEstacion(estacion);
+		} else {
+			galaxia.devolverEstacion(x, y).insertarPersonaje(this);
 		}
 		this.personajeMovido(); // pone movido a true
 		galaxia.devolverEstacion(x, y).obtenerColaPersonajes().remove();
@@ -93,9 +95,9 @@ public class Personaje {
 	// }
 
 	public void accionEstacion(Estacion estacion) {
-		if (!estacion.obtenerListaMidiclorianos().isEmpty()) {
-			listaMidi.add(estacion.obtenerListaMidiclorianos().getFirst());
-			estacion.obtenerListaMidiclorianos().removeFirst();
+		if (estacion.mostrarMidiclorianos() != " ") {
+			listaMidi.add(estacion.obtenerPrimerMidicloriano());
+			estacion.borrarPrimerMidicloriano();
 		}
 	}
 

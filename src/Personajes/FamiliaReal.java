@@ -6,9 +6,9 @@ public class FamiliaReal extends Personaje {
 		nombre = "Familia Real";
 		marca = 'F';
 		turno = 0;
-		Dir[] direcciones = { Dir.S, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.N, Dir.E, Dir.S, Dir.E, Dir.S, Dir.S,
-				Dir.O, Dir.S, Dir.E, Dir.S };
-		for (int i = 0; i < direcciones.length; i++){
+		Dir[] direcciones = { Dir.S, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.N, Dir.E, Dir.S, Dir.E, Dir.S, Dir.S, Dir.O,
+				Dir.S, Dir.E, Dir.S };
+		for (int i = 0; i < direcciones.length; i++) {
 			movimientos.add(direcciones[i]);
 		}
 	}
@@ -17,14 +17,14 @@ public class FamiliaReal extends Personaje {
 		nombre = _nombre;
 		marca = _marca;
 		turno = _turno;
-		Dir[] direcciones = { Dir.S, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.N, Dir.E, Dir.S, Dir.E, Dir.S, Dir.S,
-				Dir.O, Dir.S, Dir.E, Dir.S };
-		for (int i = 0; i < direcciones.length; i++){
+		Dir[] direcciones = { Dir.S, Dir.S, Dir.E, Dir.E, Dir.N, Dir.E, Dir.N, Dir.E, Dir.S, Dir.E, Dir.S, Dir.S, Dir.O,
+				Dir.S, Dir.E, Dir.S };
+		for (int i = 0; i < direcciones.length; i++) {
 			movimientos.add(direcciones[i]);
 		}
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return super.toString();
 	}
 
