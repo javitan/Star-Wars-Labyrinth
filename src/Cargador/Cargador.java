@@ -161,7 +161,7 @@ public class Cargador {
 		// Registrar Contrabandista en la galaxia
 		Contrabandista contrabandista = new Contrabandista(vCampos.get(1), vCampos.get(2).charAt(0),
 				Integer.parseInt(vCampos.get(3)));
-		Galaxia.obtenerInstancia().insertarFamilia(contrabandista);
+		Galaxia.obtenerInstancia().insertarContrabandista(contrabandista);
 	}
 
 	/**

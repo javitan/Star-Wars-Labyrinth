@@ -46,13 +46,9 @@ public class Galaxia {
 			}
 		}
 		listaParedes = new ArrayList<Pared>();
-		System.out.println(pintarMarcas());
+		System.out.println(this);
 		insertarParedes();
-		// Set<Integer> ady = new TreeSet();
 		tirarParedes();
-		Set<Integer> ady = new HashSet<Integer>();
-		grafo.adyacentes(4, ady);
-		System.out.println(pintarMarcas());
 		puerta = Puerta.obtenerInstanciaParam(_altura);
 		puerta.configurarPuerta();
 		mapa[_estacionPuerta / _columnas][_estacionPuerta % _columnas].ponerPuerta(puerta);
@@ -102,20 +98,21 @@ public class Galaxia {
 			int aleatorio = GenAleatorios.generarNumero(listaParedes.size());
 			pared1 = listaParedes.get(aleatorio).devolverPared1();
 			pared2 = listaParedes.get(aleatorio).devolverPared2();
-			if (mapa[pared1 / columnas][pared1 % columnas].obtenerMarca() != mapa[pared2 / columnas][pared2 % columnas]
-					.obtenerMarca()) {
+			listaParedes.remove(aleatorio);
+			int marcaPared1 = mapa[pared1 / columnas][pared1 % columnas].obtenerMarca();
+			int marcaPared2 = mapa[pared2 / columnas][pared2 % columnas].obtenerMarca();
+			if (marcaPared1 != marcaPared2) {
 				grafo.nuevoArco(pared1, pared2, 1);
 				grafo.nuevoArco(pared2, pared1, 1);
 				// extenderMarca
 				for (int i = 0; i < filas; i++) {
 					for (int j = 0; j < columnas; j++) {
-						if (mapa[i][j].obtenerMarca() == mapa[pared2 / columnas][pared2 % columnas].obtenerMarca()) {
-							mapa[i][j].ponerMarca(mapa[pared1 / columnas][pared1 % columnas].obtenerMarca());
+						if (mapa[i][j].obtenerMarca() == marcaPared2) {
+							mapa[i][j].ponerMarca(marcaPared1);
 						}
 					}
 				}
 			}
-			listaParedes.remove(aleatorio);
 		}
 	}
 
@@ -363,52 +360,36 @@ public class Galaxia {
 	// }
 
 	public String toString() {
-		String cadena = " ";
+		String string = " ";
 		for (int i = 0; i < columnas; i++) {
-			cadena = cadena + "_";
+			string = string + "_ ";
 		}
-		cadena = cadena + "\n";
+		string = string + "\n";
 		for (int i = 0; i < filas; i++) {
-			cadena = cadena + "|";
+			string = string + "|";
 			for (int j = 0; j < columnas; j++) {
 				if (mapa[i][j].obtenerColaPersonajes().size() > 1) {
-					cadena = cadena + mapa[i][j].obtenerColaPersonajes().size();
+					string = string + mapa[i][j].obtenerColaPersonajes().size();
 				} else if (mapa[i][j].obtenerColaPersonajes().size() == 0) {
-					if (i < filas - 1) {
-						if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i + 1][j].obtenerIdEstacion())) {
-							cadena = cadena + " ";
-						} else {
-							cadena = cadena + "_";
-						}
+					if (i < filas - 1
+							&& grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i + 1][j].obtenerIdEstacion())) {
+						string = string + " ";
 					} else {
-						cadena = cadena + "_";
-					}
-					if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j + 1].obtenerIdEstacion())) {
-						cadena = cadena + " ";
-					} else {
-						cadena = cadena + "|";
+						string = string + "_";
 					}
 				} else if (mapa[i][j].obtenerColaPersonajes().size() == 1) {
-					cadena = cadena + mapa[i][j].obtenerColaPersonajes().element();
+					string = string + mapa[i][j].obtenerColaPersonajes().element();
 				}
-				// if (j == 0) {
-				// cadena = cadena + "|";
-				// } else {
-				// if (j < columnas - 1) {
-				// if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j
-				// + 1].obtenerIdEstacion())) {
-				// cadena = cadena + " ";
-				// } else {
-				// cadena = cadena + "|";
-				// }
-				// } else {
-				// cadena = cadena + "|";
-				// }
-				// }
+				if (j < columnas - 1
+						&& grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j + 1].obtenerIdEstacion())) {
+					string = string + " ";
+				} else {
+					string = string + "|";
+				}
 			}
-			cadena = cadena + "\n";
+			string = string + "\n";
 		}
-		return cadena;
+		return string;
 	}
 
 	// public static void main(String[] args) {
