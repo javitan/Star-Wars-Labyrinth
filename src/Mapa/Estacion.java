@@ -19,17 +19,14 @@ import Personajes.Personaje;
 public class Estacion {
 
 	private int id;
+	private int marca;
 	private Puerta puerta;
 	private Queue<Personaje> colaPersonajes;
 	private LinkedList<Midicloriano> listaMidiclorianos;
 
-	public Estacion() {
-		id = -1;
-		puerta = null;
-	}
-
 	public Estacion(int _id) {
 		id = _id;
+		marca = _id;
 		puerta = null;
 		colaPersonajes = new LinkedList<Personaje>();
 		listaMidiclorianos = new LinkedList<Midicloriano>();
@@ -41,6 +38,14 @@ public class Estacion {
 
 	public int obtenerIdEstacion() {
 		return id;
+	}
+	
+	public int obtenerMarca(){
+		return marca;
+	}
+	
+	public void ponerMarca(int _marca){
+		marca = _marca;
 	}
 
 	// public LinkedList<Midicloriano> obtenerListaMidiclorianos() {

@@ -11,30 +11,48 @@
 package Mapa;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Queue;
+import java.util.Set;
 
+import Cargador.GenAleatorios;
+import ED.Grafo;
 import Personajes.Personaje;
 
 public class Galaxia {
 
-	private int filas = 6;
-	private int columnas = 6;
+	private int filas;
+	private int columnas;
 	private static Galaxia singleton;
 	private Estacion mapa[][];
 	private Puerta puerta;
 	private int MAXturno = 50;
 	private int turno = 2;
+	private ArrayList<Pared> listaParedes;
+	private Grafo grafo;
 
 	private Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
-		mapa = new Estacion[_filas][_columnas];
+		grafo = new Grafo();
+		filas = _filas;
+		columnas = _columnas;
+		mapa = new Estacion[filas][columnas];
 		int num = 0;
-		for (int i = 0; i < _filas; i++) {
-			for (int j = 0; j < _columnas; j++) {
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
 				mapa[i][j] = new Estacion(num);
+				grafo.nuevoNodo(num);
 				// System.out.println("Estación " + num + " creada.");
 				num++;
 			}
 		}
+		listaParedes = new ArrayList<Pared>();
+		System.out.println(pintarMarcas());
+		insertarParedes();
+		// Set<Integer> ady = new TreeSet();
+		tirarParedes();
+		Set<Integer> ady = new HashSet<Integer>();
+		grafo.adyacentes(4, ady);
+		System.out.println(pintarMarcas());
 		puerta = Puerta.obtenerInstanciaParam(_altura);
 		puerta.configurarPuerta();
 		mapa[_estacionPuerta / _columnas][_estacionPuerta % _columnas].ponerPuerta(puerta);
@@ -52,6 +70,53 @@ public class Galaxia {
 			singleton = new Galaxia(0, 0, 0, 0);
 		}
 		return singleton;
+	}
+
+	public void insertarParedes() {
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				if (i > 0) { // N
+					Pared pared = new Pared(mapa[i][j].obtenerIdEstacion(), mapa[i - 1][j].obtenerIdEstacion());
+					listaParedes.add(pared);
+				}
+				if (j < columnas - 1) { // E
+					Pared pared = new Pared(mapa[i][j].obtenerIdEstacion(), mapa[i][j + 1].obtenerIdEstacion());
+					listaParedes.add(pared);
+				}
+				if (i < filas - 1) { // S
+					Pared pared = new Pared(mapa[i][j].obtenerIdEstacion(), mapa[i + 1][j].obtenerIdEstacion());
+					listaParedes.add(pared);
+				}
+				if (j > 0) { // O
+					Pared pared = new Pared(mapa[i][j].obtenerIdEstacion(), mapa[i][j - 1].obtenerIdEstacion());
+					listaParedes.add(pared);
+				}
+			}
+		}
+	}
+
+	public void tirarParedes() {
+		int pared1;
+		int pared2;
+		while (!listaParedes.isEmpty()) {
+			int aleatorio = GenAleatorios.generarNumero(listaParedes.size());
+			pared1 = listaParedes.get(aleatorio).devolverPared1();
+			pared2 = listaParedes.get(aleatorio).devolverPared2();
+			if (mapa[pared1 / columnas][pared1 % columnas].obtenerMarca() != mapa[pared2 / columnas][pared2 % columnas]
+					.obtenerMarca()) {
+				grafo.nuevoArco(pared1, pared2, 1);
+				grafo.nuevoArco(pared2, pared1, 1);
+				// extenderMarca
+				for (int i = 0; i < filas; i++) {
+					for (int j = 0; j < columnas; j++) {
+						if (mapa[i][j].obtenerMarca() == mapa[pared2 / columnas][pared2 % columnas].obtenerMarca()) {
+							mapa[i][j].ponerMarca(mapa[pared1 / columnas][pared1 % columnas].obtenerMarca());
+						}
+					}
+				}
+			}
+			listaParedes.remove(aleatorio);
+		}
 	}
 
 	public void insertarFamilia(Personaje pers) {
@@ -257,7 +322,7 @@ public class Galaxia {
 	// }
 	// }
 
-	public String toString() {
+	public String pintarMarcas() {
 		String string = " ";
 		for (int i = 0; i < columnas; i++) {
 			string = string + "_ ";
@@ -266,18 +331,84 @@ public class Galaxia {
 		for (int i = 0; i < filas; i++) {
 			string = string + "|";
 			for (int j = 0; j < columnas; j++) {
-				if (mapa[i][j].obtenerColaPersonajes().size() > 1) {
-					string = string + mapa[i][j].obtenerColaPersonajes().size();
-				} else if (mapa[i][j].obtenerColaPersonajes().size() == 0) {
-					string = string + "_";
-				} else if (mapa[i][j].obtenerColaPersonajes().size() == 1) {
-					string = string + mapa[i][j].obtenerColaPersonajes().element();
-				}
+				string = string + mapa[i][j].obtenerMarca();
 				string = string + "|";
 			}
 			string = string + "\n";
 		}
 		return string;
+	}
+
+	// public String toString() {
+	// String string = " ";
+	// for (int i = 0; i < columnas; i++) {
+	// string = string + "_ ";
+	// }
+	// string = string + "\n";
+	// for (int i = 0; i < filas; i++) {
+	// string = string + "|";
+	// for (int j = 0; j < columnas; j++) {
+	// if (mapa[i][j].obtenerColaPersonajes().size() > 1) {
+	// string = string + mapa[i][j].obtenerColaPersonajes().size();
+	// } else if (mapa[i][j].obtenerColaPersonajes().size() == 0) {
+	// string = string + "_";
+	// } else if (mapa[i][j].obtenerColaPersonajes().size() == 1) {
+	// string = string + mapa[i][j].obtenerColaPersonajes().element();
+	// }
+	// string = string + "|";
+	// }
+	// string = string + "\n";
+	// }
+	// return string;
+	// }
+
+	public String toString() {
+		String cadena = " ";
+		for (int i = 0; i < columnas; i++) {
+			cadena = cadena + "_";
+		}
+		cadena = cadena + "\n";
+		for (int i = 0; i < filas; i++) {
+			cadena = cadena + "|";
+			for (int j = 0; j < columnas; j++) {
+				if (mapa[i][j].obtenerColaPersonajes().size() > 1) {
+					cadena = cadena + mapa[i][j].obtenerColaPersonajes().size();
+				} else if (mapa[i][j].obtenerColaPersonajes().size() == 0) {
+					if (i < filas - 1) {
+						if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i + 1][j].obtenerIdEstacion())) {
+							cadena = cadena + " ";
+						} else {
+							cadena = cadena + "_";
+						}
+					} else {
+						cadena = cadena + "_";
+					}
+					if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j + 1].obtenerIdEstacion())) {
+						cadena = cadena + " ";
+					} else {
+						cadena = cadena + "|";
+					}
+				} else if (mapa[i][j].obtenerColaPersonajes().size() == 1) {
+					cadena = cadena + mapa[i][j].obtenerColaPersonajes().element();
+				}
+				// if (j == 0) {
+				// cadena = cadena + "|";
+				// } else {
+				// if (j < columnas - 1) {
+				// if (grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j
+				// + 1].obtenerIdEstacion())) {
+				// cadena = cadena + " ";
+				// } else {
+				// cadena = cadena + "|";
+				// }
+				// } else {
+				// cadena = cadena + "|";
+				// }
+				// }
+			}
+			cadena = cadena + "\n";
+		}
+		return cadena;
 	}
 
 	// public static void main(String[] args) {
