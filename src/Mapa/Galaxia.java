@@ -1,9 +1,9 @@
 /**
  * Implementación de la clase Galaxia.
- * @version 2.0
+ * @version 4.0
  * @author <b> Planet Express </b><br>
- * Nombre y apellidos: Javier Garcia Valencia
- * Curso: 2o GIIIS
+ * Nombre y apellidos: Javier García Valencia
+ * Curso: 3º GIIIS
  * Asignatura Desarrollo de Programas<br/>
  * Curso 15/16
  */
@@ -11,12 +11,11 @@
 package Mapa;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Queue;
-import java.util.Set;
-
+import java.util.TreeSet;
 import Cargador.GenAleatorios;
 import ED.Grafo;
+import Personajes.Dir;
 import Personajes.Personaje;
 
 public class Galaxia {
@@ -30,7 +29,25 @@ public class Galaxia {
 	private int turno = 2;
 	private ArrayList<Pared> listaParedes;
 	private Grafo grafo;
+	private ArrayList<Dir> movimientosFR;
+	private ArrayList<Integer> salasRepartir;
 
+	/**
+	 * Constructor parametrizado de la clase Galaxia. Al trabajar con un patrón
+	 * de diseño de tipo Singleton, el constructor es private para asegurarnos
+	 * de que no se puede crear una galaxia desde otra clase, y demás de que la
+	 * galaxia solo se creará una vez.
+	 * 
+	 * @param _columnas
+	 *            número de columnas que tendrá la matriz de la galaxia
+	 * @param _filas
+	 *            número de filas que tendrá la matriz de la galaxia
+	 * @param _estacionPuerta
+	 *            número de la sala en la que se encontrará la puerta de salida
+	 * @param _altura
+	 *            número correspondiente a la altura del árbol para configurar
+	 *            la puerta
+	 */
 	private Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
 		grafo = new Grafo();
 		filas = _filas;
@@ -52,8 +69,30 @@ public class Galaxia {
 		puerta = Puerta.obtenerInstanciaParam(_altura);
 		puerta.configurarPuerta();
 		mapa[_estacionPuerta / _columnas][_estacionPuerta % _columnas].ponerPuerta(puerta);
+		movimientosFR = new ArrayList<Dir>();
+		salasRepartir = new ArrayList<Integer>();
+		ArrayList<Integer> visitados = new ArrayList<Integer>();
+		System.out.println(this);
+		prof(grafo, 0, visitados);
 	}
 
+	/**
+	 * Método estático para crear la puerta. Dado que trabajamos con un patrón
+	 * de diseño de tipo Singleton, esto nos garantiza que la galaxia se creará
+	 * una sola vez, y que podemos tener acceso a ella desde cualquier clase sin
+	 * necesidad de pasarla por parámetro.
+	 * 
+	 * @param columnas
+	 *            número de columnas que tendrá la matriz de la galaxia
+	 * @param filas
+	 *            número de filas que tendrá la matriz de la galaxia
+	 * @param estacionPuerta
+	 *            número de la sala que contendrá la puerta de salida
+	 * @param altura
+	 *            número correspondiente a la altura del árbol para configurar
+	 *            la puerta
+	 * @return singleton; una instancia creada de la clase galaxia
+	 */
 	public static Galaxia obtenerInstanciaParam(int columnas, int filas, int estacionPuerta, int altura) {
 		if (singleton == null) {
 			singleton = new Galaxia(columnas, filas, estacionPuerta, altura);
@@ -61,6 +100,14 @@ public class Galaxia {
 		return singleton;
 	}
 
+	/**
+	 * Método necesario en el patrón de diseño de tipo Singleton. No se
+	 * ejecutará nunca, pero servirá como control de errores. Inicializa una
+	 * galaxia con 0 filas, 0 columnas, la puerta en la sala 0 y la altura del
+	 * árbol 0.
+	 * 
+	 * @return singleton; una instancia creada de la clase galaxia
+	 */
 	public static Galaxia obtenerInstancia() {
 		if (singleton == null) {
 			singleton = new Galaxia(0, 0, 0, 0);
@@ -68,6 +115,60 @@ public class Galaxia {
 		return singleton;
 	}
 
+	/**
+	 * Método que realiza un recorrido en profundiad en el grafo. Además, genera
+	 * las direcciones de los movimientos necesarios para ir desde la sala
+	 * origen a la sala destino y las almacena en una lista para porteriormente
+	 * pasarlas al personaje de tipo Familia Real. También guarda los números de
+	 * las salas por las que pasa para hacer el reparto de llaves por las
+	 * mismas.
+	 * 
+	 * @param grafo
+	 *            estructura de datos sobre la cual vamos a hacer el recorrido
+	 *            en profundidad
+	 * @param v
+	 *            número correspondiente a la sala de la que se parte
+	 * @param visitados
+	 *            conjunto para almacenar las salas que ya hemos visitado
+	 */
+	public void prof(Grafo grafo, int v, ArrayList<Integer> visitados) {
+		TreeSet<Integer> ady = new TreeSet<Integer>();
+		int w;
+		visitados.add(v);
+		/* PREWORK */
+		if (mapa[v / columnas][v % columnas].obtenerPuerta() != null) {
+			System.err.println(visitados.toString());
+			for (int i = 0; i < visitados.size() - 1; i++) {
+				salasRepartir.add(visitados.get(i));
+				int origen = visitados.get(i);
+				int siguiente = visitados.get(i + 1);
+				if (siguiente - origen == columnas * -1) { // N
+					movimientosFR.add(Dir.N);
+				} else if (siguiente - origen == columnas) { // S
+					movimientosFR.add(Dir.S);
+				} else if (siguiente - origen == 1) { // E
+					movimientosFR.add(Dir.E);
+				} else if (siguiente - origen == -1) { // O
+					movimientosFR.add(Dir.O);
+				}
+			}
+		} else {
+			grafo.adyacentes(v, ady);
+			while (!ady.isEmpty()) {
+				w = ady.first(); // menor
+				ady.remove(w);
+				if (!visitados.contains(w)) {
+					prof(grafo, w, visitados);
+					visitados.remove(visitados.size() - 1);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método que inserta las paredes en una estructura de datos que usaremos
+	 * para hacer el tirado de paredes posteriormente.
+	 */
 	public void insertarParedes() {
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -91,6 +192,12 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que realiza el tirado de paredes. Parte del conjunto de todas las
+	 * paredes existentes y se van tirando cambiando y extendiendo la marca de
+	 * las salas. Para con cuando de acaba el conjunto de paredes y, al final,
+	 * todas las salas tienen la misma marca.
+	 */
 	public void tirarParedes() {
 		int pared1;
 		int pared2;
@@ -116,8 +223,15 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * 
+	 * @param pers
+	 */
 	public void insertarFamilia(Personaje pers) {
 		mapa[0][0].insertarPersonaje(pers);
+		for (int i = 0; i < movimientosFR.size(); i++) {
+			pers.ponerDireccion(movimientosFR.get(i));
+		}
 	}
 
 	public void insertarJedi(Personaje pers) {
@@ -132,17 +246,6 @@ public class Galaxia {
 		mapa[filas - 1][columnas - 1].insertarPersonaje(pers);
 	}
 
-	// public void crearPersonajes() {
-	// Personaje contra = new Contrabandista();
-	// Personaje familia = new FamiliaReal();
-	// Personaje jedi = new Jedi();
-	// Personaje imperial = new Imperial();
-	// mapa[0][0].insertarPersonaje(familia);
-	// mapa[0][0].insertarPersonaje(jedi);
-	// mapa[filas - 1][columnas - 1].insertarPersonaje(imperial);
-	// mapa[filas - 1][0].insertarPersonaje(contra);
-	// }
-
 	public void ejecucion() {
 		ArrayList<Midicloriano> midiclorianos = new ArrayList<Midicloriano>();
 		for (int i = 0; i < 30; i++) {
@@ -154,11 +257,11 @@ public class Galaxia {
 			}
 		}
 		// pintarMidiclorianos(midiclorianos);
-		Integer salasRepartir[] = { 3, 4, 6, 8, 9, 10, 11, 12, 13 };
+		// Integer salasRepartir[] = { 3, 4, 6, 8, 9, 10, 11, 12, 13 };
 		int num = 0;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 5; j++) {
-				mapa[salasRepartir[i] / columnas][salasRepartir[i] % columnas]
+				mapa[salasRepartir.get(i) / columnas][salasRepartir.get(i) % columnas]
 						.insertarMidicloriano(midiclorianos.get(num));
 				num++;
 			}

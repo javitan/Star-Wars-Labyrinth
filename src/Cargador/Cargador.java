@@ -131,6 +131,7 @@ public class Cargador {
 		FamiliaReal familia = new FamiliaReal(vCampos.get(1), vCampos.get(2).charAt(0),
 				Integer.parseInt(vCampos.get(3)));
 		Galaxia.obtenerInstancia().insertarFamilia(familia);
+		
 	}
 
 	/**

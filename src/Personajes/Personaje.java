@@ -1,5 +1,6 @@
 package Personajes;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -28,6 +29,12 @@ public class Personaje {
 
 	public void aumentarTurno() {
 		turno++;
+	}
+	
+	public void insertarMovimientos(ArrayList<Dir> direcciones){
+		for (int i = 0; i < direcciones.size(); i++){
+			movimientos.add(direcciones.get(i));
+		}
 	}
 
 	public void moverPersonaje(int x, int y, Dir direccion) {

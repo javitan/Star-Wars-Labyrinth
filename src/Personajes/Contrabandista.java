@@ -6,8 +6,7 @@ public class Contrabandista extends Personaje {
 		nombre = _nombre;
 		marca = _marca;
 		turno = _turno;
-		Dir[] direcciones = { Dir.N, Dir.N, Dir.N, Dir.E, Dir.S, Dir.E, Dir.N, Dir.N, Dir.E, Dir.N, Dir.E, Dir.E, Dir.S,
-				Dir.S, Dir.S, Dir.S, Dir.S };
+		Dir[] direcciones = { Dir.E, Dir.E, Dir.E, Dir.E, Dir.O, Dir.N, Dir.E, Dir.E, Dir.S };
 		for (int i = 0; i < direcciones.length; i++) {
 			movimientos.add(direcciones[i]);
 		}
