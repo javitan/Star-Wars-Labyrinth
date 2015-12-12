@@ -39,12 +39,12 @@ public class Estacion {
 	public int obtenerIdEstacion() {
 		return id;
 	}
-	
-	public int obtenerMarca(){
+
+	public int obtenerMarca() {
 		return marca;
 	}
-	
-	public void ponerMarca(int _marca){
+
+	public void ponerMarca(int _marca) {
 		marca = _marca;
 	}
 
@@ -64,7 +64,7 @@ public class Estacion {
 		colaPersonajes.remove(_pers);
 	}
 
-	public Queue<Personaje> obtenerColaPersonajes() {
+	public Queue<Personaje> obtenerColaPersonajes() { //TODO
 		return colaPersonajes;
 	}
 
@@ -82,8 +82,7 @@ public class Estacion {
 
 	public void insertarMidicloriano(Midicloriano _midi) {
 		listaMidiclorianos.addLast(_midi);
-		Collections.sort(listaMidiclorianos); // se supone que ordena la lista
-												// (?)
+		Collections.sort(listaMidiclorianos);
 	}
 
 	public String mostrarMidiclorianos() {
@@ -97,32 +96,4 @@ public class Estacion {
 		}
 		return cadena;
 	}
-
-	// private List<Personaje> listaPersonajes;
-	//
-	// public Estacion(){
-	// listaPersonajes = new List<Personaje>();
-	// }
-	//
-	// public void meterPersonaje(Personaje pers){
-	// listaPersonajes.addLast(pers);
-	// }
-	//
-	// public void pintar() {
-	// for (int i = 0; i < listaPersonajes.size(); i++){
-	// System.out.println(listaPersonajes.get(i));
-	// }
-	// }
-	//
-	// public Personaje obtenerUltimo() {
-	// Personaje aux = new Personaje();
-	// aux = listaPersonajes.getLast();
-	// listaPersonajes.removeLast();
-	// return aux;
-	// }
-	//
-	// public int elementos() {
-	// return listaPersonajes.size();
-	// }
-
 }

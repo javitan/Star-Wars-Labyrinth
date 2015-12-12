@@ -148,14 +148,14 @@ public class Puerta {
 		probados.insertar(midi);
 	}
 
-	public void ejecucion(Cola<Midicloriano> colaMid) {
-		generarMidiclorianos();
-		configurarPuerta();
-		while (!colaMid.estaVacia()) {
-			probarMidicloriano(colaMid.primero());
-			colaMid.desencolar();
-		}
-	}
+//	public void ejecucion(Cola<Midicloriano> colaMid) {
+//		generarMidiclorianos();
+//		configurarPuerta();
+//		while (!colaMid.estaVacia()) {
+//			probarMidicloriano(colaMid.primero());
+//			colaMid.desencolar();
+//		}
+//	}
 
 	public boolean obtenerBoolPuerta() {
 		return abierta;

@@ -111,7 +111,7 @@ public class Cargador {
 	 *            array que contiene los valores de cada atributo
 	 */
 	private void crearGalaxia(int numCampos, List<String> vCampos) {
-		System.out.println("Creada galaxia: " + vCampos.get(1) + "\n");
+		//System.out.println("Creada galaxia: " + vCampos.get(1) + "\n");
 		// inicializar galaxia
 		Galaxia.obtenerInstanciaParam(Integer.parseInt(vCampos.get(1)), Integer.parseInt(vCampos.get(2)),
 				Integer.parseInt(vCampos.get(3)), Integer.parseInt(vCampos.get(4)));
@@ -126,7 +126,7 @@ public class Cargador {
 	 *            array que contiene los valores de cada atributo
 	 */
 	private void crearFamiliaReal(int numCampos, List<String> vCampos) {
-		System.out.println("Creado FamiliaReal: " + vCampos.get(1) + "\n");
+		//System.out.println("Creado FamiliaReal: " + vCampos.get(1) + "\n");
 		// Registrar FamiliaReal en la galaxia
 		FamiliaReal familia = new FamiliaReal(vCampos.get(1), vCampos.get(2).charAt(0),
 				Integer.parseInt(vCampos.get(3)));
@@ -143,7 +143,7 @@ public class Cargador {
 	 *            array que contiene los valores de cada atributo
 	 */
 	private void crearJedi(int numCampos, List<String> vCampos) {
-		System.out.println("Creado Jedi: " + vCampos.get(1) + "\n");
+		//System.out.println("Creado Jedi: " + vCampos.get(1) + "\n");
 		// Registrar Jedi en la galaxia
 		Jedi jedi = new Jedi(vCampos.get(1), vCampos.get(2).charAt(0), Integer.parseInt(vCampos.get(3)));
 		Galaxia.obtenerInstancia().insertarJedi(jedi);
@@ -158,7 +158,7 @@ public class Cargador {
 	 *            array que contiene los valores de cada atributo
 	 */
 	private void crearContrabandista(int numCampos, List<String> vCampos) {
-		System.out.println("Creado Contrabandista: " + vCampos.get(1) + "\n");
+		//System.out.println("Creado Contrabandista: " + vCampos.get(1) + "\n");
 		// Registrar Contrabandista en la galaxia
 		Contrabandista contrabandista = new Contrabandista(vCampos.get(1), vCampos.get(2).charAt(0),
 				Integer.parseInt(vCampos.get(3)));
@@ -174,7 +174,7 @@ public class Cargador {
 	 *            array que contiene los valores de cada atributo
 	 */
 	private void crearImperial(int numCampos, List<String> vCampos) {
-		System.out.println("Creado Imperial: " + vCampos.get(1) + "\n");
+		//System.out.println("Creado Imperial: " + vCampos.get(1) + "\n");
 		// Registrar Imperial en la galaxia
 		Imperial imperial = new Imperial(vCampos.get(1), vCampos.get(2).charAt(0), Integer.parseInt(vCampos.get(3)));
 		Galaxia.obtenerInstancia().insertarImperial(imperial);

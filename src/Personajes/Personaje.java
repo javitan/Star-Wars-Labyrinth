@@ -30,9 +30,9 @@ public class Personaje {
 	public void aumentarTurno() {
 		turno++;
 	}
-	
-	public void insertarMovimientos(ArrayList<Dir> direcciones){
-		for (int i = 0; i < direcciones.size(); i++){
+
+	public void insertarMovimientos(ArrayList<Dir> direcciones) {
+		for (int i = 0; i < direcciones.size(); i++) {
 			movimientos.add(direcciones.get(i));
 		}
 	}
@@ -93,6 +93,16 @@ public class Personaje {
 			puerta.probarMidicloriano(listaMidi.getLast());
 			listaMidi.removeLast();
 		}
+	}
+
+	public String devolverMidiclorianos() {
+		String cadena = " ";
+		for (int i = 0; i < listaMidi.size(); i++) {
+			cadena = cadena + listaMidi.get(i);
+			cadena = cadena + " ";
+		}
+		cadena = cadena.substring(0, cadena.length() - 1);
+		return cadena;
 	}
 
 	// public void insertarMovimientos(Dir[] direcciones){
