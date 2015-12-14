@@ -8,6 +8,7 @@ public class FamiliaReal extends Personaje {
 		nombre = _nombre;
 		marca = _marca;
 		turno = _turno;
+		tipo = "familiareal";
 	}
 
 	public String toString() {

@@ -1,5 +1,6 @@
 package Cargador;
 
+import java.io.IOException;
 import java.util.List;
 
 import Mapa.Galaxia;
@@ -71,8 +72,10 @@ public class Cargador {
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo de la
 	 *            instancia
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	public void crear(String elto, int numCampos, List<String> vCampos) {
+	public void crear(String elto, int numCampos, List<String> vCampos) throws NumberFormatException, IOException {
 		// Si existe elemento y el número de campos es correcto, procesarlo...
 		// si no, error
 		int numElto = queElemento(elto);
@@ -109,8 +112,10 @@ public class Cargador {
 	 *            número de atributos que tendrá la instancia
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	private void crearGalaxia(int numCampos, List<String> vCampos) {
+	private void crearGalaxia(int numCampos, List<String> vCampos) throws NumberFormatException, IOException {
 		//System.out.println("Creada galaxia: " + vCampos.get(1) + "\n");
 		// inicializar galaxia
 		Galaxia.obtenerInstanciaParam(Integer.parseInt(vCampos.get(1)), Integer.parseInt(vCampos.get(2)),
@@ -124,8 +129,9 @@ public class Cargador {
 	 *            número de atributos que tendrá la instancia
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo
+	 * @throws IOException 
 	 */
-	private void crearFamiliaReal(int numCampos, List<String> vCampos) {
+	private void crearFamiliaReal(int numCampos, List<String> vCampos) throws IOException {
 		//System.out.println("Creado FamiliaReal: " + vCampos.get(1) + "\n");
 		// Registrar FamiliaReal en la galaxia
 		FamiliaReal familia = new FamiliaReal(vCampos.get(1), vCampos.get(2).charAt(0),
@@ -141,8 +147,9 @@ public class Cargador {
 	 *            número de atributos que tendrá la instancia
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo
+	 * @throws IOException 
 	 */
-	private void crearJedi(int numCampos, List<String> vCampos) {
+	private void crearJedi(int numCampos, List<String> vCampos) throws IOException {
 		//System.out.println("Creado Jedi: " + vCampos.get(1) + "\n");
 		// Registrar Jedi en la galaxia
 		Jedi jedi = new Jedi(vCampos.get(1), vCampos.get(2).charAt(0), Integer.parseInt(vCampos.get(3)));
@@ -156,8 +163,9 @@ public class Cargador {
 	 *            número de atributos que tendrá la instancia
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo
+	 * @throws IOException 
 	 */
-	private void crearContrabandista(int numCampos, List<String> vCampos) {
+	private void crearContrabandista(int numCampos, List<String> vCampos) throws IOException {
 		//System.out.println("Creado Contrabandista: " + vCampos.get(1) + "\n");
 		// Registrar Contrabandista en la galaxia
 		Contrabandista contrabandista = new Contrabandista(vCampos.get(1), vCampos.get(2).charAt(0),
@@ -172,8 +180,9 @@ public class Cargador {
 	 *            número de atributos que tendrá la instancia
 	 * @param vCampos
 	 *            array que contiene los valores de cada atributo
+	 * @throws IOException 
 	 */
-	private void crearImperial(int numCampos, List<String> vCampos) {
+	private void crearImperial(int numCampos, List<String> vCampos) throws IOException {
 		//System.out.println("Creado Imperial: " + vCampos.get(1) + "\n");
 		// Registrar Imperial en la galaxia
 		Imperial imperial = new Imperial(vCampos.get(1), vCampos.get(2).charAt(0), Integer.parseInt(vCampos.get(3)));

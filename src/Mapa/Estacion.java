@@ -91,7 +91,7 @@ public class Estacion {
 			Midicloriano midi = listaMidiclorianos.get(i);
 			cadena = cadena + midi.obtenerIdMidi();
 			if (midi != listaMidiclorianos.getLast()) {
-				cadena = cadena + ", ";
+				cadena = cadena + " ";
 			}
 		}
 		return cadena;

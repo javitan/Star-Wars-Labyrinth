@@ -10,6 +10,9 @@
 
 package Mapa;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -29,10 +32,14 @@ public class Galaxia {
 	private Puerta puerta;
 	private int MAXturno = 50;
 	private int turno = 2;
+	private int salaPuerta;
 	private ArrayList<Pared> listaParedes;
 	private Grafo grafo;
 	private ArrayList<Dir> movimientosFR;
 	private ArrayList<Integer> salasRepartir;
+	private Estacion estacionGanadores;
+	private BufferedWriter bufferOut;
+	String fichero = "fichero.txt";
 
 	/**
 	 * Constructor parametrizado de la clase Galaxia. Al trabajar con un patrón
@@ -49,12 +56,15 @@ public class Galaxia {
 	 * @param _altura
 	 *            número correspondiente a la altura del árbol para configurar
 	 *            la puerta
+	 * @throws IOException
 	 */
-	private Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) {
+	private Galaxia(int _columnas, int _filas, int _estacionPuerta, int _altura) throws IOException {
 		grafo = new Grafo();
 		filas = _filas;
 		columnas = _columnas;
+		salaPuerta = _estacionPuerta;
 		mapa = new Estacion[filas][columnas];
+		estacionGanadores = new Estacion(1111);
 		int num = 0;
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -80,20 +90,31 @@ public class Galaxia {
 		grafo.floyd();
 	}
 
-	private void pintarRutas() {
+	public int devolverSalaPuerta() {
+		return salaPuerta;
+	}
+
+	private void pintarRutas(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		Queue<Personaje> cola = new LinkedList<Personaje>();
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
 				cola.addAll(mapa[i][j].obtenerColaPersonajes());
 				if (cola != null) {
 					while (!cola.isEmpty()) {
-						System.out.println("ruta:" + cola.peek().obtenerMarca() + ":" + " "
-								+ cola.peek().obtenerColaMovimientos().toString());
+						System.out.println("(ruta:" + cola.peek().obtenerMarca() + ":" + " "
+								+ cola.peek().devolverDirecciones() + ")");
+						bufferOut.write("(ruta:" + cola.peek().obtenerMarca() + ":" + " "
+								+ cola.peek().devolverDirecciones() + ")");
+						bufferOut.newLine();
 						cola.remove();
 					}
 				}
 			}
 		}
+	}
+
+	private Estacion devolverEstacionGanadores() {
+		return estacionGanadores;
 	}
 
 	/**
@@ -112,8 +133,10 @@ public class Galaxia {
 	 *            número correspondiente a la altura del árbol para configurar
 	 *            la puerta
 	 * @return singleton; una instancia creada de la clase galaxia
+	 * @throws IOException
 	 */
-	public static Galaxia obtenerInstanciaParam(int columnas, int filas, int estacionPuerta, int altura) {
+	public static Galaxia obtenerInstanciaParam(int columnas, int filas, int estacionPuerta, int altura)
+			throws IOException {
 		if (singleton == null) {
 			singleton = new Galaxia(columnas, filas, estacionPuerta, altura);
 		}
@@ -127,8 +150,9 @@ public class Galaxia {
 	 * árbol 0.
 	 * 
 	 * @return singleton; una instancia creada de la clase galaxia
+	 * @throws IOException
 	 */
-	public static Galaxia obtenerInstancia() {
+	public static Galaxia obtenerInstancia() throws IOException {
 		if (singleton == null) {
 			singleton = new Galaxia(0, 0, 0, 0);
 		}
@@ -262,6 +286,13 @@ public class Galaxia {
 		mapa[filas - 1][0].insertarPersonaje(pers);
 	}
 
+	public boolean sonAdyacentes(int origen, int destino) {
+		if (grafo.adyacente(origen, destino)) {
+			return true;
+		}
+		return false;
+	}
+
 	public void insertarImperial(Personaje pers) {
 		mapa[filas - 1][columnas - 1].insertarPersonaje(pers);
 		int[] esquinas = { mapa[0][columnas - 1].obtenerIdEstacion(), mapa[0][0].obtenerIdEstacion(),
@@ -298,16 +329,57 @@ public class Galaxia {
 		}
 	}
 
-	public void ejecucion() {
-		pintarRutas();
+	public void ejecucion(String nomFichero, BufferedWriter bufferOut) throws IOException {
+		bufferOut.write(ficheroTablero());
+		bufferOut.newLine();
+		pintarRutas(nomFichero, bufferOut);
 		repartoMidiclorianos();
-		pintarPrimerTurno();
-		moverPersonajes();
+		pintarPrimerTurno(nomFichero, bufferOut);
+		moverPersonajes(nomFichero, bufferOut);
 	}
 
-	private void moverPersonajes() {
+	private String ficheroTablero() {
+		Queue<Personaje> cola = new LinkedList<Personaje>();
+		String string = " ";
+		for (int i = 0; i < columnas; i++) {
+			string = string + "_ ";
+		}
+		string = string + "\n";
+		for (int i = 0; i < filas; i++) {
+			string = string + "|";
+			for (int j = 0; j < columnas; j++) {
+				if (cola.size() > 1) {
+					string = string + cola.size();
+				} else if (cola.size() == 0) {
+					if (i < filas - 1
+							&& grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i + 1][j].obtenerIdEstacion())) {
+						string = string + " ";
+					} else {
+						string = string + "_";
+					}
+				} else if (cola.size() == 1) {
+					string = string + cola.element();
+				}
+				if (j < columnas - 1
+						&& grafo.adyacente(mapa[i][j].obtenerIdEstacion(), mapa[i][j + 1].obtenerIdEstacion())) {
+					string = string + " ";
+				} else {
+					string = string + "|";
+				}
+			}
+			string = string + "\n";
+		}
+		string = string.substring(0, string.length() - 1);
+		return string;
+	}
+
+	public BufferedWriter devolverFlujo() {
+		return bufferOut;
+	}
+
+	private void moverPersonajes(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		Personaje personaje;
-		while (turno <= MAXturno && !Puerta.obtenerInstancia().obtenerBoolPuerta()) {
+		while (turno <= MAXturno+1 && !Puerta.obtenerInstancia().obtenerBoolPuerta()) {
 			for (int i = 0; i < filas; i++) {
 				for (int j = 0; j < columnas; j++) {
 					if (!mapa[i][j].obtenerColaPersonajes().isEmpty()) {
@@ -315,6 +387,10 @@ public class Galaxia {
 							personaje = mapa[i][j].obtenerPrimero();
 							if (personaje.obtenerTurno() < turno) {
 								personaje.accionPuerta(mapa[i][j]);
+								if (Puerta.obtenerInstancia().obtenerBoolPuerta()) {
+									mapa[i][j].borrarPersonaje(personaje);
+									insertarSalaGanadores(personaje);
+								}
 								personaje.aumentarTurno();
 								if (!personaje.obtenerColaMovimientos().isEmpty()) {
 									personaje.moverPersonaje(i, j, personaje.obtenerMovimiento());
@@ -328,14 +404,43 @@ public class Galaxia {
 					}
 				}
 			}
-			pintarInformacion();
+			pintarInformacion(nomFichero, bufferOut);
 			turno++;
 			resetBoolPersonajes();
 		}
+		if (Puerta.obtenerInstancia().obtenerBoolPuerta()) {
+			System.out.println("(personajesganadores)");
+			bufferOut.write("(personajesganadores)");
+			bufferOut.newLine();
+			Queue<Personaje> cola = new LinkedList<Personaje>();
+			cola.addAll(devolverEstacionGanadores().obtenerColaPersonajes());
+			while (!cola.isEmpty()) {
+				System.out.println("(ganador:" + cola.peek().devolverTipo() + ":" + cola.peek().obtenerMarca() + ":"
+						+ "1111" + ":" + cola.peek().obtenerTurno() + ":" + cola.peek().devolverMidiclorianos() + ")");
+				bufferOut.write("(ganador:" + cola.peek().devolverTipo() + ":" + cola.peek().obtenerMarca() + ":"
+						+ "1111" + ":" + cola.peek().obtenerTurno() + ":" + cola.peek().devolverMidiclorianos() + ")");
+				bufferOut.newLine();
+				cola.remove();
+			}
+		}
 	}
 
-	private void pintarInformacion() {
-		System.out.println("(turno:" + (turno - 1) + ")");
+	private void insertarSalaGanadores(Personaje personaje) {
+		Estacion estacion = devolverEstacionGanadores();
+		estacion.insertarPersonaje(personaje);
+	}
+
+	private void pintarInformacion(String nomFichero, BufferedWriter bufferOut) throws IOException {
+		bufferOut.write("(turno:" + (turno-1) + ")");
+		bufferOut.newLine();
+		bufferOut.write("(galaxia:" + ((filas) * (columnas) - 1) + ")");
+		bufferOut.newLine();
+		bufferOut.write("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
+				+ puerta.obtenerProbados() + ")");
+		bufferOut.newLine();
+		bufferOut.write(this.toString());
+		bufferOut.newLine();
+		System.out.println("(turno:" + (turno-1) + ")");
 		System.out.println("(galaxia:" + ((filas) * (columnas) - 1) + ")");
 		System.out.println("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
 				+ puerta.obtenerProbados() + ")");
@@ -345,23 +450,30 @@ public class Galaxia {
 				if (mapa[i][j].mostrarMidiclorianos() != " ") {
 					System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
 							+ mapa[i][j].mostrarMidiclorianos() + ")");
+					bufferOut.write("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
+							+ mapa[i][j].mostrarMidiclorianos() + ")");
+					bufferOut.newLine();
 				}
 			}
 		}
 		// System.out.println("\n");
-		pintarInfoPersonajes();
+		pintarInfoPersonajes(nomFichero, bufferOut);
 	}
 
-	private void pintarInfoPersonajes() {
+	private void pintarInfoPersonajes(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		Queue<Personaje> cola = new LinkedList<Personaje>();
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
 				cola.addAll(mapa[i][j].obtenerColaPersonajes());
 				if (cola != null) {
 					while (!cola.isEmpty()) {
-						System.out.println("(" + cola.peek().obtenerNombre() + ":" + cola.peek().obtenerMarca() + ":"
+						System.out.println("(" + cola.peek().devolverTipo() + ":" + cola.peek().obtenerMarca() + ":"
 								+ mapa[i][j].obtenerIdEstacion() + ":" + cola.peek().obtenerTurno() + ":"
 								+ cola.peek().devolverMidiclorianos() + ")");
+						bufferOut.write("(" + cola.peek().devolverTipo() + ":" + cola.peek().obtenerMarca() + ":"
+								+ mapa[i][j].obtenerIdEstacion() + ":" + cola.peek().obtenerTurno() + ":"
+								+ cola.peek().devolverMidiclorianos() + ")");
+						bufferOut.newLine();
 						cola.remove();
 					}
 				}
@@ -369,7 +481,16 @@ public class Galaxia {
 		}
 	}
 
-	private void pintarPrimerTurno() {
+	private void pintarPrimerTurno(String nomFichero, BufferedWriter bufferOut) throws IOException {
+		bufferOut.write("(turno:0)");
+		bufferOut.newLine();
+		bufferOut.write("(galaxia:" + ((filas) * (columnas) - 1) + ")");
+		bufferOut.newLine();
+		bufferOut.write("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
+				+ puerta.obtenerProbados() + ")");
+		bufferOut.newLine();
+		bufferOut.write(this.toString());
+		bufferOut.newLine();
 		System.out.println("(turno:0)");
 		System.out.println("(galaxia:" + ((filas) * (columnas) - 1) + ")");
 		System.out.println("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
@@ -380,10 +501,14 @@ public class Galaxia {
 				if (mapa[i][j].mostrarMidiclorianos() != " ") {
 					System.out.println("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
 							+ mapa[i][j].mostrarMidiclorianos() + ")");
+					bufferOut.write("(estacion:" + mapa[i][j].obtenerIdEstacion() + ":"
+							+ mapa[i][j].mostrarMidiclorianos() + ")");
+					bufferOut.newLine();
 				}
 			}
 		}
 		// System.out.println("\n");
+		pintarInfoPersonajes(nomFichero, bufferOut);
 	}
 
 	private void repartoMidiclorianos() {

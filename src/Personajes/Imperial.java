@@ -10,23 +10,25 @@ public class Imperial extends Personaje {
 		nombre = _nombre;
 		marca = _marca;
 		turno = _turno;
+		tipo = "imperial";
 		insertarMidiclorianosImperial();
 	}
 
 	public void insertarMidiclorianosImperial() {
 		for (int i = 1; i <= 29; i++) {
-			Midicloriano midi = new Midicloriano(i);
-			listaMidi.add(midi);
+			if (i % 2 != 0) {
+				Midicloriano midi = new Midicloriano(i);
+				listaMidi.add(midi);
+			}
 		}
 	}
-	
+
 	public Dir obtenerMovimiento() {
 		Dir movimiento = movimientos.peek();
 		movimientos.remove();
 		movimientos.add(movimiento);
 		return movimiento;
 	}
-
 
 	public void accionPuerta(Estacion estacion) {
 		if (estacion.obtenerPuerta() != null && estacion.obtenerPuerta().obtenerBoolPuerta()) {
@@ -42,10 +44,10 @@ public class Imperial extends Personaje {
 		}
 	}
 
-	public void cogerMidi(Midicloriano midi) {
-		listaMidi.addLast(midi);
-
-	}
+//	public void cogerMidi(Midicloriano midi) {
+//		listaMidi.addLast(midi);
+//
+//	}
 
 	public String toString() {
 		return super.toString();
