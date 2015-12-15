@@ -1,9 +1,9 @@
 /**
- * Implementación de la clase Arbol binario de busqueda.
- * @version 2.0
+ * Implementación de la clase Arbol.
+ * @version 4.0
  * @author <b> Planet Express </b><br>
- * Nombre y apellidos: Javier Garcia Valencia
- * Curso: 2o GIIIS
+ * Nombre y apellidos: Javier García Valencia
+ * Curso: 3º GIIIS
  * Asignatura Desarrollo de Programas<br/>
  * Curso 15/16
  */

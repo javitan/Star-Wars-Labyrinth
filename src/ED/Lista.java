@@ -1,9 +1,9 @@
 /**
  * Implementación de la clase Lista.
- * @version 2.0
+ * @version 4.0
  * @author <b> Planet Express </b><br>
- * Nombre y apellidos: Javier Garcia Valencia
- * Curso: 2o GIIIS
+ * Nombre y apellidos: Javier García Valencia
+ * Curso: 3º GIIIS
  * Asignatura Desarrollo de Programas<br/>
  * Curso 15/16
  */

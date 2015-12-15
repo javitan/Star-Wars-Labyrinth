@@ -90,11 +90,25 @@ public class Galaxia {
 		grafo.floyd();
 	}
 
+	/**
+	 * Método que devuelve el número id de la sala que contiene la puerta.
+	 * 
+	 * @return salaPuerta entero con el id de la sala que contiene la puerta.
+	 */
 	public int devolverSalaPuerta() {
 		return salaPuerta;
 	}
 
-	private void pintarRutas(String nomFichero, BufferedWriter bufferOut) throws IOException {
+	/**
+	 * Método que pinta por pantalla y escribe en el fichero log las rutas que
+	 * tienen los personajes antes de comenzar la ejecución.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log donde se va a escribir
+	 * @param bufferOut
+	 *            buffer de salida donde se escribirá
+	 */
+	private void pintarRutas(String nomFichero, BufferedWriter bufferOut) {
 		Queue<Personaje> cola = new LinkedList<Personaje>();
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -103,9 +117,19 @@ public class Galaxia {
 					while (!cola.isEmpty()) {
 						System.out.println("(ruta:" + cola.peek().obtenerMarca() + ":" + " "
 								+ cola.peek().devolverDirecciones() + ")");
-						bufferOut.write("(ruta:" + cola.peek().obtenerMarca() + ":" + " "
-								+ cola.peek().devolverDirecciones() + ")");
-						bufferOut.newLine();
+						try {
+							bufferOut.write("(ruta:" + cola.peek().obtenerMarca() + ":" + " "
+									+ cola.peek().devolverDirecciones() + ")");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						try {
+							bufferOut.newLine();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						cola.remove();
 					}
 				}
@@ -113,6 +137,12 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que devuelve la estación 1111 correspondiente a la estación de los
+	 * ganadores.
+	 * 
+	 * @return estacionGanadores estación 1111
+	 */
 	private Estacion devolverEstacionGanadores() {
 		return estacionGanadores;
 	}
@@ -268,8 +298,11 @@ public class Galaxia {
 	}
 
 	/**
+	 * Método que inserta un personaje de tipo Familia Real y que además le pasa
+	 * los movimientos calculados previamente.
 	 * 
 	 * @param pers
+	 *            personaje de tipo Familia Real
 	 */
 	public void insertarFamilia(Personaje pers) {
 		mapa[0][0].insertarPersonaje(pers);
@@ -278,14 +311,37 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que inserta un personaje de tipo Jedi.
+	 * 
+	 * @param pers
+	 *            personaje de tipo Jedi
+	 */
 	public void insertarJedi(Personaje pers) {
 		mapa[0][0].insertarPersonaje(pers);
 	}
 
+	/**
+	 * Método que inserta un personaje de tipo Contrabandista.
+	 * 
+	 * @param pers
+	 *            personaje de tipo contrabandista
+	 */
 	public void insertarContrabandista(Personaje pers) {
 		mapa[filas - 1][0].insertarPersonaje(pers);
 	}
 
+	/**
+	 * Método que comprueba si dos salas dadas por parámetro son adyacentes o no
+	 * en el grafo.
+	 * 
+	 * @param origen
+	 *            número id de una de las salas que se quiere comprobar
+	 * @param destino
+	 *            número id de la otra sala que se quiere comprobar
+	 * @return booleano indicando true si son adyacentes o false en caso
+	 *         contrario
+	 */
 	public boolean sonAdyacentes(int origen, int destino) {
 		if (grafo.adyacente(origen, destino)) {
 			return true;
@@ -293,6 +349,13 @@ public class Galaxia {
 		return false;
 	}
 
+	/**
+	 * Método que inserta un personaje de tipo Imperial. Además, calcula sus
+	 * movimientos y los inserta en el personaje.
+	 * 
+	 * @param pers
+	 *            personaje de tipo Imperial
+	 */
 	public void insertarImperial(Personaje pers) {
 		mapa[filas - 1][columnas - 1].insertarPersonaje(pers);
 		int[] esquinas = { mapa[0][columnas - 1].obtenerIdEstacion(), mapa[0][0].obtenerIdEstacion(),
@@ -329,6 +392,15 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que realiza toda la ejecución del proyecto.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log
+	 * @param bufferOut
+	 *            buffer de salida donde se escrbirá la ejecución
+	 * @throws IOException
+	 */
 	public void ejecucion(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		bufferOut.write(ficheroTablero());
 		bufferOut.newLine();
@@ -338,6 +410,11 @@ public class Galaxia {
 		moverPersonajes(nomFichero, bufferOut);
 	}
 
+	/**
+	 * Método devuelve una cadena con el tablero sin los personajes.
+	 * 
+	 * @return string con el tablero sin personajes
+	 */
 	private String ficheroTablero() {
 		Queue<Personaje> cola = new LinkedList<Personaje>();
 		String string = " ";
@@ -373,13 +450,29 @@ public class Galaxia {
 		return string;
 	}
 
+	/**
+	 * Método que devuelve el flujo de salida para trabajar con el fichero log.
+	 * 
+	 * @return bufferOut con el flujo de salida
+	 */
 	public BufferedWriter devolverFlujo() {
 		return bufferOut;
 	}
 
+	/**
+	 * Método que se encarga de realizar los movimientos de los personaje en el
+	 * tablero. Además va pintando cada uno de los movimientos seguido de la
+	 * información y escribirlo todo en el fichero log.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log
+	 * @param bufferOut
+	 *            flujo de salida para trabajar con el fichero log
+	 * @throws IOException
+	 */
 	private void moverPersonajes(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		Personaje personaje;
-		while (turno <= MAXturno+1 && !Puerta.obtenerInstancia().obtenerBoolPuerta()) {
+		while (turno <= MAXturno + 1 && !Puerta.obtenerInstancia().obtenerBoolPuerta()) {
 			for (int i = 0; i < filas; i++) {
 				for (int j = 0; j < columnas; j++) {
 					if (!mapa[i][j].obtenerColaPersonajes().isEmpty()) {
@@ -425,13 +518,31 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que inserta un personaje obtenido por parámetro en la estación de
+	 * los ganadores (estación 1111).
+	 * 
+	 * @param personaje
+	 *            personaje ganador
+	 */
 	private void insertarSalaGanadores(Personaje personaje) {
 		Estacion estacion = devolverEstacionGanadores();
 		estacion.insertarPersonaje(personaje);
 	}
 
+	/**
+	 * Método que imprime por pantalla y escribe en el fichero de log toda la
+	 * información correspondiente a los laberintos con los turnos, las
+	 * estaciones y la puerta.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log
+	 * @param bufferOut
+	 *            buffer de salida para trabajar con el fichero log
+	 * @throws IOException
+	 */
 	private void pintarInformacion(String nomFichero, BufferedWriter bufferOut) throws IOException {
-		bufferOut.write("(turno:" + (turno-1) + ")");
+		bufferOut.write("(turno:" + (turno - 1) + ")");
 		bufferOut.newLine();
 		bufferOut.write("(galaxia:" + ((filas) * (columnas) - 1) + ")");
 		bufferOut.newLine();
@@ -440,7 +551,7 @@ public class Galaxia {
 		bufferOut.newLine();
 		bufferOut.write(this.toString());
 		bufferOut.newLine();
-		System.out.println("(turno:" + (turno-1) + ")");
+		System.out.println("(turno:" + (turno - 1) + ")");
 		System.out.println("(galaxia:" + ((filas) * (columnas) - 1) + ")");
 		System.out.println("(puerta:" + puerta.obtenerEstadoPuerta() + ":" + puerta.obtenerAltura() + ":" + puerta + ":"
 				+ puerta.obtenerProbados() + ")");
@@ -460,6 +571,17 @@ public class Galaxia {
 		pintarInfoPersonajes(nomFichero, bufferOut);
 	}
 
+	/**
+	 * Método que imprime por pantalla y escribe en el fichero la información de
+	 * los personajes: su tipo, marca, sala en la que se encuentra, turno y
+	 * midiclorianos recogidos.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log
+	 * @param bufferOut
+	 *            buffer de salida para trabajar con el fichero log
+	 * @throws IOException
+	 */
 	private void pintarInfoPersonajes(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		Queue<Personaje> cola = new LinkedList<Personaje>();
 		for (int i = 0; i < filas; i++) {
@@ -481,6 +603,16 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que escribirá por pantalla toda la información que corresponde al
+	 * turno 0. Además la incluirá en el fichero log.
+	 * 
+	 * @param nomFichero
+	 *            nombre del fichero log
+	 * @param bufferOut
+	 *            buffer de salida para trabajar con el fichero log
+	 * @throws IOException
+	 */
 	private void pintarPrimerTurno(String nomFichero, BufferedWriter bufferOut) throws IOException {
 		bufferOut.write("(turno:0)");
 		bufferOut.newLine();
@@ -511,6 +643,11 @@ public class Galaxia {
 		pintarInfoPersonajes(nomFichero, bufferOut);
 	}
 
+	/**
+	 * Método que realiza el reparto de midiclorianos por las salas tal y como
+	 * se establece en la documentación.
+	 * 
+	 */
 	private void repartoMidiclorianos() {
 		ArrayList<Midicloriano> midiclorianos = new ArrayList<Midicloriano>();
 		for (int i = 0; i < 30; i++) {
@@ -531,14 +668,31 @@ public class Galaxia {
 		}
 	}
 
+	/**
+	 * Método que devuelve el número de filas que tiene el la matriz de las
+	 * estaciones.
+	 * 
+	 * @return número de filas del tablero
+	 */
 	public int obtenerFilas() {
 		return filas;
 	}
 
+	/**
+	 * Método que devuelve el número de columnas que tiene la matriz de las
+	 * estaciones.
+	 * 
+	 * @return número de columnas del tablero
+	 */
 	public int obtenerColumnas() {
 		return columnas;
 	}
 
+	/**
+	 * Método que pone el booleano que indica si un personaje se ha movido a
+	 * false.
+	 * 
+	 */
 	public void resetBoolPersonajes() {
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -554,23 +708,15 @@ public class Galaxia {
 		}
 	}
 
-	// public boolean comprobarMovidos(Queue<Personaje> colaPersonajes) {
-	// boolean movidos = true;
-	// Personaje personaje;
-	// int i = 0;
-	// while (i < colaPersonajes.size() && movidos == true) {
-	// personaje = colaPersonajes.peek();
-	// if (personaje.movido() == false) {
-	// movidos = false;
-	// } else {
-	// colaPersonajes.remove();
-	// colaPersonajes.add(personaje);
-	// }
-	// i++;
-	// }
-	// return movidos;
-	// }
-
+	/**
+	 * Método que comprueba si en la cola de personajes de la sala queda algún
+	 * personaje por moverse.
+	 * 
+	 * @param colaPersonajes
+	 *            Cola de personajes de una estación
+	 * @return booleano con el valor true si todos los personajes se han movido;
+	 *         false en caso de que exista alguno que no se haya movido aún
+	 */
 	public boolean comprobarMovidos(Queue<Personaje> colaPersonajes) {
 		boolean movidos = true;
 		Personaje personaje;
@@ -588,50 +734,25 @@ public class Galaxia {
 		return movidos;
 	}
 
-	public void borrarPersonaje(int x, int y) {
-		mapa[x][y].obtenerColaPersonajes().remove();
-	}
-
+	/**
+	 * Método que devuelve una estación concreta del tablero, dadas una fila y
+	 * columnas por parámetro.
+	 * 
+	 * @param x
+	 *            fila correspondiente a la matriz de estaciones
+	 * @param y
+	 *            columna correspondiente a la matriz de estaciones
+	 * @return estación que se encuentra en la fila x, columna y
+	 */
 	public Estacion devolverEstacion(int x, int y) {
 		return mapa[x][y];
 	}
 
-	// public void insertar(int x, int y, Personaje personaje) {
-	// mapa[x][y].insertarPersonaje(personaje);
-	// personaje.accionEstacion(mapa[x][y]);
-	// personaje.accionPuerta(mapa[x][y]);
-	//
-	// }
-
-	// public void moverPersonaje(int x, int y, Personaje personaje, Dir
-	// direccion) {
-	// if (direccion == Dir.N && x > 0) {
-	// mapa[x - 1][y].insertarPersonaje(personaje);
-	// personaje.accionEstacion(mapa[x - 1][y]);
-	// // personaje.accionPuerta(mapa[x-1][y]);
-	// } else if (direccion == Dir.S && x < filas - 1) {
-	// mapa[x + 1][y].insertarPersonaje(personaje);
-	// personaje.accionEstacion(mapa[x + 1][y]);
-	// // personaje.accionPuerta(mapa[x+1][y]);
-	// } else if (direccion == Dir.E && y < columnas - 1) {
-	// mapa[x][y + 1].insertarPersonaje(personaje);
-	// personaje.accionEstacion(mapa[x][y + 1]);
-	// // personaje.accionPuerta(mapa[x][y+1]);
-	// } else if (direccion == Dir.O && y > 0) {
-	// mapa[x][y - 1].insertarPersonaje(personaje);
-	// personaje.accionEstacion(mapa[x][y - 1]);
-	// // personaje.accionPuerta(mapa[x][y-1]);
-	// }
-	// personaje.personajeMovido(); // pone movido a true
-	// mapa[x][y].obtenerColaPersonajes().remove();
-	// }
-
-	// public void pintarMidiclorianos(ArrayList<Midicloriano> _midiclorianos) {
-	// for (int i = 0; i < _midiclorianos.size(); i++) {
-	// System.out.println(_midiclorianos.get(i));
-	// }
-	// }
-
+	/**
+	 * Método que pinta el tablero sin tirar las paredes.
+	 * 
+	 * @return string con el tablero con todas las paredes
+	 */
 	public String pintarMarcas() {
 		String string = " ";
 		for (int i = 0; i < columnas; i++) {
@@ -649,29 +770,10 @@ public class Galaxia {
 		return string;
 	}
 
-	// public String toString() {
-	// String string = " ";
-	// for (int i = 0; i < columnas; i++) {
-	// string = string + "_ ";
-	// }
-	// string = string + "\n";
-	// for (int i = 0; i < filas; i++) {
-	// string = string + "|";
-	// for (int j = 0; j < columnas; j++) {
-	// if (mapa[i][j].obtenerColaPersonajes().size() > 1) {
-	// string = string + mapa[i][j].obtenerColaPersonajes().size();
-	// } else if (mapa[i][j].obtenerColaPersonajes().size() == 0) {
-	// string = string + "_";
-	// } else if (mapa[i][j].obtenerColaPersonajes().size() == 1) {
-	// string = string + mapa[i][j].obtenerColaPersonajes().element();
-	// }
-	// string = string + "|";
-	// }
-	// string = string + "\n";
-	// }
-	// return string;
-	// }
-
+	/**
+	 * Método toString para pintar el laberinto. 
+	 *
+	 */
 	public String toString() {
 		String string = " ";
 		for (int i = 0; i < columnas; i++) {
