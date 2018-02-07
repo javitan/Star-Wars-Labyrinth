@@ -771,7 +771,7 @@ public class Galaxia {
 	}
 
 	/**
-	 * Método toString para pintar el laberinto. 
+	 * Método toString para pintar el laberinto.
 	 *
 	 */
 	public String toString() {

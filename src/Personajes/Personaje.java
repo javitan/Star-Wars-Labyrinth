@@ -37,13 +37,13 @@ public class Personaje {
 	 * 
 	 */
 	public Personaje() {
-		nombre = "";
-		marca = '?';
+		nombre = "personaje";
+		marca = 'p';
 		listaMidi = new LinkedList<Midicloriano>();
 		movimientos = new LinkedList<Dir>();
 		movido = false;
 		turno = 0;
-		tipo = "";
+		tipo = "personaje";
 	}
 
 	/**
